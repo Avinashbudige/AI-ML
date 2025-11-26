@@ -37,7 +37,7 @@ Prerequisites:
 └── Dockerfile               # optional reproducible environment
 ```
 
-## What recruiters can learn from this repo
+## What recruiters can view from this repo
 - Code organization and modularity.
 - Ability to reproduce experiments and results.
 - Familiarity with data preprocessing, modeling, and evaluation.
