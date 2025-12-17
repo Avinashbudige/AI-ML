@@ -10,13 +10,15 @@ CHUNK_SIZE = 1000  # Default chunk size in characters
 CHUNK_OVERLAP = 200  # Default overlap between chunks
 
 # Embedding configuration
-DEFAULT_EMBEDDING_MODEL = "openai"  # Options: "openai", "bge"
+DEFAULT_EMBEDDING_MODEL = "bge"  # Options: "openai", "bge" - BGE runs locally without API keys
 OPENAI_EMBEDDING_MODEL = "text-embedding-ada-002"
 BGE_EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"
 
 # Vector store configuration
 DEFAULT_VECTOR_STORE = "faiss"  # Options: "faiss", "opensearch"
 FAISS_INDEX_TYPE = "FlatL2"  # Options: "FlatL2", "IVFFlat", "HNSW"
+FAISS_IVF_NLIST = 100  # Number of clusters for IVFFlat index
+FAISS_HNSW_M = 32  # Number of bi-directional links for HNSW index
 
 # File processing settings
 SUPPORTED_PDF_EXTENSIONS = [".pdf"]

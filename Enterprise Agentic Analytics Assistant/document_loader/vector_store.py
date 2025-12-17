@@ -9,6 +9,7 @@ from typing import List, Dict, Any, Optional
 import numpy as np
 import json
 import logging
+from .config import FAISS_IVF_NLIST, FAISS_HNSW_M
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -31,7 +32,9 @@ class VectorStorePreparation:
     def prepare_for_faiss(
         self,
         documents: List[Dict[str, Any]],
-        index_type: str = "FlatL2"
+        index_type: str = "FlatL2",
+        nlist: Optional[int] = None,
+        hnsw_m: Optional[int] = None
     ) -> Dict[str, Any]:
         """
         Prepare embedded documents for FAISS vector store.
@@ -39,6 +42,8 @@ class VectorStorePreparation:
         Args:
             documents (List[Dict[str, Any]]): List of documents with embeddings
             index_type (str): Type of FAISS index ('FlatL2', 'IVFFlat', 'HNSW')
+            nlist (Optional[int]): Number of clusters for IVFFlat (default: from config)
+            hnsw_m (Optional[int]): Number of bi-directional links for HNSW (default: from config)
             
         Returns:
             Dict[str, Any]: Dictionary containing FAISS index and metadata
@@ -58,12 +63,14 @@ class VectorStorePreparation:
         if index_type == "FlatL2":
             index = faiss.IndexFlatL2(self.embedding_dimension)
         elif index_type == "IVFFlat":
+            nlist = nlist or FAISS_IVF_NLIST
             quantizer = faiss.IndexFlatL2(self.embedding_dimension)
-            index = faiss.IndexIVFFlat(quantizer, self.embedding_dimension, 100)
+            index = faiss.IndexIVFFlat(quantizer, self.embedding_dimension, nlist)
             # Train the index
             index.train(embeddings)
         elif index_type == "HNSW":
-            index = faiss.IndexHNSWFlat(self.embedding_dimension, 32)
+            hnsw_m = hnsw_m or FAISS_HNSW_M
+            index = faiss.IndexHNSWFlat(self.embedding_dimension, hnsw_m)
         else:
             raise ValueError(f"Unsupported FAISS index type: {index_type}")
         
