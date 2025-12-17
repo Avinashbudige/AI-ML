@@ -10,10 +10,10 @@ import sys
 from pathlib import Path
 
 # Add the Enterprise Agentic Analytics Assistant directory to Python path
+# This allows importing document_loader as a module
 script_dir = Path(__file__).parent
 ea3_dir = script_dir.parent
-root_dir = ea3_dir.parent
-sys.path.insert(0, str(root_dir))
+sys.path.insert(0, str(ea3_dir))
 
 
 def example_pdf_loading():
@@ -22,7 +22,7 @@ def example_pdf_loading():
     print("Example 1: Loading PDF Documents")
     print("=" * 60)
     
-    from 'Enterprise Agentic Analytics Assistant'.document_loader import PDFLoader
+    from document_loader import PDFLoader
     
     # Note: Replace with actual PDF file path
     pdf_path = "sample_document.pdf"
@@ -54,7 +54,7 @@ def example_markdown_loading():
     print("Example 2: Loading Markdown Documents")
     print("=" * 60)
     
-    from 'Enterprise Agentic Analytics Assistant'.document_loader import MarkdownLoader
+    from document_loader import MarkdownLoader
     
     # Create a sample markdown file for demonstration
     sample_md_path = "/tmp/sample_document.md"
@@ -111,7 +111,7 @@ def example_recursive_chunking():
     print("Example 3: Recursive Chunking")
     print("=" * 60)
     
-    from 'Enterprise Agentic Analytics Assistant'.document_loader import MarkdownLoader, RecursiveChunker
+    from document_loader import MarkdownLoader, RecursiveChunker
     
     # Load sample markdown
     sample_md_path = "/tmp/sample_document.md"
@@ -146,7 +146,7 @@ def example_semantic_chunking():
     print("Example 4: Semantic Chunking")
     print("=" * 60)
     
-    from 'Enterprise Agentic Analytics Assistant'.document_loader import MarkdownLoader, SemanticChunker
+    from document_loader import MarkdownLoader, SemanticChunker
     
     sample_md_path = "/tmp/sample_document.md"
     if not Path(sample_md_path).exists():
@@ -179,7 +179,7 @@ def example_bge_embeddings():
     print("Example 5: BGE Embeddings (Local)")
     print("=" * 60)
     
-    from 'Enterprise Agentic Analytics Assistant'.document_loader import EmbeddingGenerator
+    from document_loader import EmbeddingGenerator
     
     # Sample texts
     texts = [
@@ -220,7 +220,7 @@ def example_openai_embeddings():
     print("Example 6: OpenAI Embeddings (API-based)")
     print("=" * 60)
     
-    from 'Enterprise Agentic Analytics Assistant'.document_loader import EmbeddingGenerator
+    from document_loader import EmbeddingGenerator
     
     # Check for API key
     api_key = os.getenv("OPENAI_API_KEY")
@@ -265,7 +265,7 @@ def example_faiss_preparation():
     print("Example 7: FAISS Vector Store Preparation")
     print("=" * 60)
     
-    from 'Enterprise Agentic Analytics Assistant'.document_loader import VectorStorePreparation, EmbeddingGenerator
+    from document_loader import VectorStorePreparation, EmbeddingGenerator
     
     try:
         # Generate some sample embedded documents
@@ -355,7 +355,7 @@ def example_opensearch_preparation():
     print("Example 9: OpenSearch Preparation")
     print("=" * 60)
     
-    from 'Enterprise Agentic Analytics Assistant'.document_loader import VectorStorePreparation, EmbeddingGenerator
+    from document_loader import VectorStorePreparation, EmbeddingGenerator
     
     try:
         # Generate some sample embedded documents
