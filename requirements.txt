@@ -18,3 +18,7 @@ plotly
 nltk
 spacy
 matplotlib
+PyPDF2
+sentence-transformers
+faiss-cpu
+openai
