@@ -5,6 +5,7 @@ Simple test script for the Document Loader module.
 
 import os
 import sys
+import tempfile
 from pathlib import Path
 
 # Add the repository root to the Python path
@@ -33,8 +34,9 @@ def test_markdown_loading():
     print("=" * 60)
     
     # Create a sample markdown file
-    sample_md = "/tmp/test_document.md"
-    content = """# Introduction to AI
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as f:
+        sample_md = f.name
+        content = """# Introduction to AI
 
 Artificial Intelligence is transforming the world.
 
@@ -158,10 +160,15 @@ def test_faiss_preparation(embedding_gen, embedded_docs):
         print(f"✓ Index type: {faiss_data['index_type']}")
         
         # Save index
+        with tempfile.NamedTemporaryFile(suffix='.bin', delete=False) as idx_file:
+            index_path = idx_file.name
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as meta_file:
+            metadata_path = meta_file.name
+        
         vector_prep.save_faiss_index(
             faiss_data=faiss_data,
-            index_path="/tmp/test_faiss_index.bin",
-            metadata_path="/tmp/test_metadata.json"
+            index_path=index_path,
+            metadata_path=metadata_path
         )
         print()
         
@@ -234,9 +241,12 @@ def test_opensearch_preparation(embedding_gen, embedded_docs):
         print(f"✓ Embedding dimension: {opensearch_data['embedding_dimension']}")
         
         # Save bulk file
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as bulk_file:
+            output_path = bulk_file.name
+        
         vector_prep.save_opensearch_bulk_file(
             opensearch_data=opensearch_data,
-            output_path="/tmp/test_opensearch_bulk.json"
+            output_path=output_path
         )
         print()
         
