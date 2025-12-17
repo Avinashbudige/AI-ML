@@ -7,6 +7,7 @@ to process documents, generate embeddings, and prepare data for vector stores.
 
 import os
 import sys
+import tempfile
 from pathlib import Path
 
 # Add the Enterprise Agentic Analytics Assistant directory to Python path
@@ -57,8 +58,9 @@ def example_markdown_loading():
     from document_loader import MarkdownLoader
     
     # Create a sample markdown file for demonstration
-    sample_md_path = "/tmp/sample_document.md"
-    sample_content = """# Introduction to Machine Learning
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as f:
+        sample_md_path = f.name
+        sample_content = """# Introduction to Machine Learning
 
 Machine learning is a subset of artificial intelligence that focuses on learning from data.
 
@@ -77,9 +79,6 @@ Machine learning has many applications including:
 - Natural language processing
 - Recommendation systems
 """
-    
-    # Write sample file
-    with open(sample_md_path, 'w') as f:
         f.write(sample_content)
     
     try:
@@ -98,31 +97,26 @@ Machine learning has many applications including:
             print(f"Section {i+1}: {section['metadata'].get('header', 'N/A')}")
         print()
         
-        return documents
+        return documents, sample_md_path
         
     except Exception as e:
         print(f"Error: {e}\n")
-        return None
+        return None, None
 
 
-def example_recursive_chunking():
+def example_recursive_chunking(documents, sample_md_path):
     """Example: Recursive chunking strategy."""
     print("=" * 60)
     print("Example 3: Recursive Chunking")
     print("=" * 60)
     
-    from document_loader import MarkdownLoader, RecursiveChunker
+    from document_loader import RecursiveChunker
     
-    # Load sample markdown
-    sample_md_path = "/tmp/sample_document.md"
-    if not Path(sample_md_path).exists():
-        print("Sample markdown not found. Run example 2 first.\n")
+    if documents is None or sample_md_path is None:
+        print("Documents not available. Run example 2 first.\n")
         return None
     
     try:
-        loader = MarkdownLoader(sample_md_path)
-        documents = loader.load()
-        
         # Chunk with recursive strategy
         chunker = RecursiveChunker(chunk_size=200, chunk_overlap=50)
         chunks = chunker.chunk(documents)
@@ -140,23 +134,19 @@ def example_recursive_chunking():
         return None
 
 
-def example_semantic_chunking():
+def example_semantic_chunking(documents, sample_md_path):
     """Example: Semantic chunking strategy."""
     print("=" * 60)
     print("Example 4: Semantic Chunking")
     print("=" * 60)
     
-    from document_loader import MarkdownLoader, SemanticChunker
+    from document_loader import SemanticChunker
     
-    sample_md_path = "/tmp/sample_document.md"
-    if not Path(sample_md_path).exists():
-        print("Sample markdown not found. Run example 2 first.\n")
+    if documents is None or sample_md_path is None:
+        print("Documents not available. Run example 2 first.\n")
         return None
     
     try:
-        loader = MarkdownLoader(sample_md_path)
-        documents = loader.load()
-        
         # Chunk with semantic strategy
         chunker = SemanticChunker(chunk_size=300, chunk_overlap=50)
         chunks = chunker.chunk(documents)
@@ -295,10 +285,15 @@ def example_faiss_preparation():
         print(f"Index type: {faiss_data['index_type']}")
         
         # Save to temporary location
+        with tempfile.NamedTemporaryFile(suffix='.bin', delete=False) as idx_file:
+            index_path = idx_file.name
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as meta_file:
+            metadata_path = meta_file.name
+        
         vector_prep.save_faiss_index(
             faiss_data=faiss_data,
-            index_path="/tmp/sample_faiss_index.bin",
-            metadata_path="/tmp/sample_metadata.json"
+            index_path=index_path,
+            metadata_path=metadata_path
         )
         print()
         
@@ -386,9 +381,12 @@ def example_opensearch_preparation():
         print(f"\nIndex mapping: {mapping['mappings']['properties'].keys()}")
         
         # Save bulk file
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as bulk_file:
+            output_path = bulk_file.name
+        
         vector_prep.save_opensearch_bulk_file(
             opensearch_data=opensearch_data,
-            output_path="/tmp/opensearch_bulk.json"
+            output_path=output_path
         )
         print()
         
@@ -406,14 +404,18 @@ def main():
     print("=" * 60 + "\n")
     
     # Run examples
-    example_markdown_loading()
-    example_recursive_chunking()
-    example_semantic_chunking()
+    documents, sample_md_path = example_markdown_loading()
+    example_recursive_chunking(documents, sample_md_path)
+    example_semantic_chunking(documents, sample_md_path)
     example_bge_embeddings()
     example_openai_embeddings()
     example_faiss_preparation()
     example_faiss_search()
     example_opensearch_preparation()
+    
+    # Clean up temp file
+    if sample_md_path and os.path.exists(sample_md_path):
+        os.unlink(sample_md_path)
     
     print("=" * 60)
     print("Examples completed!")

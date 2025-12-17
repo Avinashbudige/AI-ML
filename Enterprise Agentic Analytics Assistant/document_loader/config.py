@@ -18,15 +18,22 @@ BGE_EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"
 DEFAULT_VECTOR_STORE = "faiss"  # Options: "faiss", "opensearch"
 FAISS_INDEX_TYPE = "FlatL2"  # Options: "FlatL2", "IVFFlat", "HNSW"
 
-# API Keys (should be set via environment variables)
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-
 # File processing settings
 SUPPORTED_PDF_EXTENSIONS = [".pdf"]
 SUPPORTED_MARKDOWN_EXTENSIONS = [".md", ".markdown"]
 
 # Semantic chunking settings
 SEMANTIC_SIMILARITY_THRESHOLD = 0.75  # Threshold for semantic chunking
+
+
+def get_openai_api_key() -> str:
+    """
+    Safely retrieve OpenAI API key from environment.
+    
+    Returns:
+        str: API key from environment variable, or empty string if not set
+    """
+    return os.getenv("OPENAI_API_KEY", "")
 
 
 def get_config() -> Dict[str, Any]:

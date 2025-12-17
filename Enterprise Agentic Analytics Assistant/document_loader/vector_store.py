@@ -8,6 +8,10 @@ in vector databases like FAISS and OpenSearch.
 from typing import List, Dict, Any, Optional
 import numpy as np
 import json
+import logging
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 
 class VectorStorePreparation:
@@ -92,7 +96,7 @@ class VectorStorePreparation:
         faiss_data: Dict[str, Any],
         index_path: str,
         metadata_path: str
-    ):
+    ) -> Dict[str, str]:
         """
         Save FAISS index and metadata to disk.
         
@@ -100,6 +104,9 @@ class VectorStorePreparation:
             faiss_data (Dict[str, Any]): FAISS data from prepare_for_faiss()
             index_path (str): Path to save the FAISS index
             metadata_path (str): Path to save the metadata JSON
+            
+        Returns:
+            Dict[str, str]: Paths where files were saved
         """
         try:
             import faiss
@@ -113,8 +120,13 @@ class VectorStorePreparation:
         with open(metadata_path, 'w', encoding='utf-8') as f:
             json.dump(faiss_data['metadata'], f, indent=2)
         
-        print(f"FAISS index saved to: {index_path}")
-        print(f"Metadata saved to: {metadata_path}")
+        logger.info(f"FAISS index saved to: {index_path}")
+        logger.info(f"Metadata saved to: {metadata_path}")
+        
+        return {
+            'index_path': index_path,
+            'metadata_path': metadata_path
+        }
     
     def prepare_for_opensearch(
         self,
@@ -191,13 +203,16 @@ class VectorStorePreparation:
         self,
         opensearch_data: Dict[str, Any],
         output_path: str
-    ):
+    ) -> str:
         """
         Save OpenSearch documents in bulk format for ingestion.
         
         Args:
             opensearch_data (Dict[str, Any]): OpenSearch data from prepare_for_opensearch()
             output_path (str): Path to save the bulk file
+            
+        Returns:
+            str: Path where bulk file was saved
         """
         index_name = opensearch_data['index_name']
         
@@ -210,8 +225,10 @@ class VectorStorePreparation:
                 # Document line
                 f.write(json.dumps(doc) + '\n')
         
-        print(f"OpenSearch bulk file saved to: {output_path}")
-        print(f"Use: curl -X POST 'localhost:9200/_bulk' -H 'Content-Type: application/json' --data-binary @{output_path}")
+        logger.info(f"OpenSearch bulk file saved to: {output_path}")
+        logger.info(f"Use: curl -X POST 'localhost:9200/_bulk' -H 'Content-Type: application/json' --data-binary @{output_path}")
+        
+        return output_path
     
     def search_similar(
         self,

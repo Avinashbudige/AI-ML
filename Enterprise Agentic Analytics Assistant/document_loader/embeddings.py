@@ -6,12 +6,13 @@ Supports multiple embedding models including OpenAI embeddings and BGE models.
 
 from typing import List, Dict, Any, Optional
 import numpy as np
+import os
 from abc import ABC, abstractmethod
 from .config import (
     DEFAULT_EMBEDDING_MODEL,
     OPENAI_EMBEDDING_MODEL,
     BGE_EMBEDDING_MODEL,
-    OPENAI_API_KEY
+    get_openai_api_key
 )
 
 
@@ -55,10 +56,10 @@ class OpenAIEmbeddingGenerator(BaseEmbeddingGenerator):
         
         Args:
             model_name (str): Name of the OpenAI embedding model to use
-            api_key (Optional[str]): OpenAI API key. If None, uses OPENAI_API_KEY from config
+            api_key (Optional[str]): OpenAI API key. If None, retrieves from environment
         """
         self.model_name = model_name
-        self.api_key = api_key or OPENAI_API_KEY
+        self.api_key = api_key or get_openai_api_key()
         
         if not self.api_key:
             raise ValueError(

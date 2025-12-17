@@ -3,6 +3,7 @@ PDF document loader using PyPDF2.
 """
 
 from typing import List, Dict, Any
+import warnings
 import PyPDF2
 from .base_loader import BaseDocumentLoader
 from .config import SUPPORTED_PDF_EXTENSIONS
@@ -90,7 +91,7 @@ class PDFLoader(BaseDocumentLoader):
                 
                 for page_num in page_numbers:
                     if page_num < 1 or page_num > num_pages:
-                        print(f"Warning: Page {page_num} is out of range. Skipping.")
+                        warnings.warn(f"Page {page_num} is out of range. Skipping.", UserWarning)
                         continue
                     
                     page = pdf_reader.pages[page_num - 1]  # Convert to 0-indexed
