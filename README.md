@@ -15,26 +15,44 @@ A compact machine-learning project demonstrating end-to-end workflow: data inges
 - Scripts for training and evaluation
 
 ## Quick start (what to try first)
+
+### 🚀 Run in GitHub Codespace (Recommended)
+Click the green "Code" button → "Codespaces" → "Create codespace on new-directory-update"
+
+The environment will be automatically configured with all dependencies. Then run:
+```bash
+./run_demo.sh
+```
+
+Or run the document loader demo directly:
+```bash
+python "Enterprise Agentic Analytics Assistant/document_loader/demo.py"
+```
+
+### 💻 Local Setup
 Prerequisites:
-- Python 3.10+ and pip (or use provided Docker dev container)
+- Python 3.10+ and pip
+- Install dependencies: `pip install -r requirements.txt`
 
 
 ## Project structure (example)
 ```
 .
-├── README.md                # This file
-├── data/                    # raw and processed data (not usually checked in)
-├── notebooks/               # EDA and experimentation notebooks
-│   └── 01-exploration.ipynb
-├── src/                     # main source code
-│   ├── data/                # data loaders and preprocessing
-│   ├── models/              # model definitions
-│   └── utils/               # helpers
-├── scripts/                 # CLI entrypoints (train, evaluate, predict)
-├── configs/                 # YAML/JSON configs for experiments
-├── tests/                   # unit/integration tests
-├── requirements.txt         # Python dependencies
-└── Dockerfile               # optional reproducible environment
+├── README.md                                    # This file
+├── .devcontainer/                               # GitHub Codespace configuration
+│   ├── devcontainer.json                        # Dev container settings
+│   ├── setup.sh                                 # Quick setup script
+│   └── README.md                                # Codespace instructions
+├── Enterprise Agentic Analytics Assistant/      # EA³ Document Loader Module
+│   └── document_loader/                         # Document processing pipeline
+│       ├── README.md                            # Module documentation
+│       ├── demo.py                              # Quick demonstration
+│       ├── demo_complete.py                     # Full pipeline overview
+│       └── ...                                  # Loaders, chunkers, embedders
+├── data/                                        # raw and processed data
+├── notebooks/                                   # EDA and experimentation notebooks
+├── requirements.txt                             # Python dependencies
+└── run_demo.sh                                  # Quick launcher for Codespace
 ```
 
 ## What recruiters can view from this repo
