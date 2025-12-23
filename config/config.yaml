@@ -1,0 +1,7 @@
+# Configuration file for EdgeVision IoT
+
+cameras:
+    - id: cam01
+      rtsp: rtsp://user:pass@ip:554/stream
+    - id: cam02
+      rtsp: rtsp://user:pass@ip:554/stream2
