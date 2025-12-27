@@ -1,0 +1,9 @@
+# Git Ignore
+*.pyc
+*.pyo
+__pycache__/
+*.pkl
+.DS_Store
+.env
+*.idea
+*.vscode
