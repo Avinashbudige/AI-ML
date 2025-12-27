@@ -1,3 +1,0 @@
-# Requirements
-
-TODO: Add specific Python libraries and dependencies here.
